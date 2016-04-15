@@ -1,0 +1,4 @@
+*.pyc
+*.spec
+byugrades.inputs
+classes/__pycache__/
