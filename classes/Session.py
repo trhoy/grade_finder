@@ -176,8 +176,6 @@ class ByuSession:
 	def parsePastClass(self, aClass):
 	
 		aClass_list = self.parseClass(aClass, 2)
-		
-		print aClass_list
 			
 		department = aClass_list[0]
 		number = aClass_list[1]

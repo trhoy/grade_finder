@@ -12,6 +12,7 @@ class Semester:
 		self.name = name
 		self.year = year
 		self.is_current_semester = is_current_semester
+		self.is_complete = False
 		if not classes:
 			self.classes = []
 		else:
@@ -36,6 +37,8 @@ class Semester:
 			if aClass.grade != -1.0:
 				hours = hours + aClass.credit_hours
 				points_earned = points_earned + aClass.grade_points
+			else:
+				self.is_complete = False
 			
 		self.credit_hours = hours
 		self.credits_earned = points_earned
@@ -47,7 +50,10 @@ class Semester:
 		return self.gpa
 		
 	def __str__(self):
-		return_string = "\n" + \
+		return_string = ""
+		if self.is_current_semester and not self.is_complete:
+			return_string = return_string + "This semester is not yet finished.\n"
+		return_string = return_string + "\n" + \
 			self.name + " " + self.year + \
 			"\n---------------------------" + \
 			"\nCredit Hours: " + str(self.credit_hours) + \
