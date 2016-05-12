@@ -113,13 +113,14 @@ class ByuSession:
 		# Patterns to look for in the transcript
 		semester_start_pattern = re.compile("((?:Fall|Winter|Spring|Summer)\s(?:Semester|Term)\s[0-9]{4}).*")
 		current_semester_signifier = re.compile("(?:CURRENT ENROLLMENT).*")
-		transfer_credits_start = re.compile("(?:YRTRM)[\S\s].*")
+		transfer_credits_start = re.compile("(?:YRTRM).*")
 		end_pattern = re.compile("(?:SEM|TRN|--------------------------------------------------------------).*")
 		past_class_pattern = re.compile("[\s\S]{6}(?:[0-9]{3}|[0-9]{3}[A-Z])\s+[0-9]{3}[\s\S]{42}[0-9]\.[0-9]{2}.*[A-P|W][+-]?")
 		current_class_pattern = re.compile("[\s\S]{6}(?:[0-9]{3}|[0-9]{3}[A-Z])\s+[0-9]{3}[\s\S]{42}[0-9]\.[0-9]{2}")
 		
 		start_semester = False
 		start_current_semester = False
+		transfer_semester = False
 		
 		semesters = []
 		recording_semester = ""
@@ -130,8 +131,6 @@ class ByuSession:
 			if end_pattern.match(line.strip()) and start_semester:
 				start_semester = False
 				semesters.append(recording_semester)
-				if start_current_semester:
-					break;
 			# Current semester sigifier
 			elif current_semester_signifier.match(line):
 				start_current_semester = True
@@ -150,7 +149,17 @@ class ByuSession:
 						recording_semester.addClass(self.parsePastClass(line))
 					else:
 						recording_semester.addClass(self.parseCurrentClass(line))
-						
+			elif transfer_credits_start.match(line.strip()): # Transfer credits
+				print "Transfer Credits Started!: ", line
+				transfer_semester = True
+				recording_semester = Semester("Transfer", "N/A", False)
+			elif end_pattern.match(line.strip()) and transfer_semester: # Transfer credits ended
+				print "Transfer Credits Ended: ", line
+				transfer_semester = False
+				semesters.append(recording_semester)
+			elif transfer_semester: # Record transfer semester
+				print "Transfer Line: ", line
+				recording_semester.addClass(self.parseTransferClass(line))
 					
 		if not semesters:
 			raise ByuSessionError("There are no classes listed for the selected semester.\nIf you are receiving this message in error, please try again.")
@@ -211,3 +220,30 @@ class ByuSession:
 		aClass_list[3:(len(aClass_list) - parse_offset)] = [" ".join(aClass_list[3:(len(aClass_list) - parse_offset)])]
 			
 		return aClass_list
+		
+	def parseTransferClass(self, aClass):
+		credits_pattern = re.compile("[0-9][.][0-9]{2}")
+		grades_pattern = re.compile("\s[A-F][\-|\+]?\s")
+		aClass_list = aClass.split()
+		
+		department = aClass_list[1]
+		number = aClass_list[2]
+		section = 000
+		
+		name = ""
+		finished = False
+		for item in aClass_list[3:]:
+			if not finished:
+				for letter in item:
+					if letter.isdigit():
+						finished = True
+						break
+				if not finished:
+					name = name + " " + item
+				
+		credit_hours = float(credits_pattern.search(aClass).group(0))
+		letter_grade = grades_pattern.search(aClass).group(0).strip()
+		
+		print "Credit Hours: ", str(credit_hours), "\nLetter Grade: ", str(letter_grade)
+		
+		return Class(department, number, section, name, credit_hours, letter_grade)

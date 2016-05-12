@@ -213,7 +213,7 @@ class Ui_ByuGradesWindow(object):
         self.actionAbout.setText(_translate("ByuGradesWindow", "About", None))
         self.actionExit.setText(_translate("ByuGradesWindow", "Exit", None))
         self.actionExit.setShortcut(_translate("ByuGradesWindow", "Ctrl+Q", None))
-        self.actionVersion_0_1.setText(_translate("ByuGradesWindow", "Version 0.1", None))
+        self.actionVersion_0_1.setText(_translate("ByuGradesWindow", "Version 0.2", None))
         self.actionSave.setText(_translate("ByuGradesWindow", "Save Output", None))
         self.actionSave.setShortcut(_translate("ByuGradesWindow", "Ctrl+S", None))
 

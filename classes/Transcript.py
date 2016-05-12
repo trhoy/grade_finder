@@ -10,7 +10,7 @@ class Transcript:
 		self.total_credit_hours = 0.0
 		self.total_credits_earned = 0.0
 		self.total_gpa = 0.0
-		self.current_semester = "There is no current sememster listed"
+		self.current_semester = "There is no current sememster listed\n"
 		
 		if semesters:
 			self.semesters = semesters

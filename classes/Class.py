@@ -9,17 +9,17 @@ class Class:
 	def __init__(self, department, number, section, name, credit_hours, letter_grade = None):
 	
 		if not isinstance(department, basestring):
-			raise ClassError("Department needs to be a string. Deparment was: " + type(department))
+			raise ClassError("Department needs to be a string. Deparment was: " + str(type(department)))
 		if not isinstance(number, basestring):
-			raise ClassError("Class number needs to be a string. Class number was: " + type(number))
+			raise ClassError("Class number needs to be a string. Class number was: " + str(type(number)))
 		if not isinstance(section, (int, long)):
-			raise ClassError("Section number needs to be an int. Section was: " + type(section))
+			raise ClassError("Section number needs to be an int. Section was: " + str(type(section)))
 		if not isinstance(name, basestring):
-			raise ClassError("Name needs to be a string. Name was: " + type(name))
+			raise ClassError("Name needs to be a string. Name was: " + str(type(name)))
 		if not isinstance(credit_hours, float):
-			raise ClassError("Points total needs to be a float. Points total was: " + type(credit_hours))
+			raise ClassError("Points total needs to be a float. Points total was: " + str(type(credit_hours)))
 		if not isinstance(letter_grade, basestring) and letter_grade is not None:
-			raise ClassError("Letter grade needs to be a string. Letter grade was: " + type(name))
+			raise ClassError("Letter grade needs to be a string. Letter grade was: " + str(type(name)))
 		
 		self.department = department
 		self.number = number
